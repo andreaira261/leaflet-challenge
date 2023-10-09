@@ -29,23 +29,6 @@ function createFeatures(earthquakeData) {
       return L.circleMarker(coordinates, geoMarkers);
    };
 
-   // Define a function to determine the color of each marker according to the depth of the earthquake. 
-   function colors(depth) {
-      let color = "";
-      if (depth <= 10) {
-         return color = "#a3f600";
-      } else if (depth <= 30) {
-         return color = "#dcf400";
-      } else if (depth <= 50) {
-         return color = "#f7db11";
-      } else if (depth <= 70) {
-         return color = "#fdb72a";
-      } else if (depth <= 90) {
-         return color = "#fca35d";
-      } else {
-         return color = "#ff5f65";
-      }
-   };
 
    // Create a GeoJSON layer that contains the features array on the earthquakeData object.
    // Run the onEachFeature function once for each piece of data in the array.
@@ -58,31 +41,55 @@ function createFeatures(earthquakeData) {
    createMap(earthquakes);
 }
 
-// Define a function to add a legend to the map.
+// Define a function to determine the color of each marker according to the depth of the earthquake. 
+function colors(depth) {
+    if (depth <= 10) {
+        return "#a3f600";
+    } else if (depth <= 30) {
+        return "#dcf400";
+    } else if (depth <= 50) {
+        return "#f7db11";
+    } else if (depth <= 70) {
+        return "#fdb72a";
+    } else if (depth <= 90) {
+        return "#fca35d";
+    } else {
+        return "#ff5f65";
+    }
+}
+
 function addLegend(map) {
     let legend = L.control({ position: 'bottomright' });
- 
+
     legend.onAdd = function () {
-       let div = L.DomUtil.create('div', 'info legend');
-       let depths = [-10, 10, 30, 50, 70, 90];
-       let labels = [];
- 
-       // Loop through the depth ranges and generate labels.
-       for (let i = 0; i < depths.length; i++) {
-          let from = depths[i];
-          let to = depths[i + 1];
- 
-          labels.push(
-             '<i style="background:' + colors(from + 1) + '"></i> ' +
-             from + (to ? '&ndash;' + to : '+'));
-       }
- 
-       div.innerHTML = labels.join('<br>');
-       return div;
+        let div = L.DomUtil.create('div', 'info legend');
+        let depths = [-10, 10, 30, 50, 70, 90];
+
+        // Add a white background to the legend.
+        div.style.backgroundColor = 'white';
+        div.style.padding = '10px';
+
+        // Loop through the depth ranges and generate labels with color previews.
+        for (let i = 0; i < depths.length; i++) {
+            let from = depths[i];
+            let to = depths[i + 1];
+            let color = colors(from + 1);
+
+            // Create a label with a colored square and the depth range.
+            let label = '<li style="background:' + color + '"></i> ' +
+            from + (to ? '&ndash;' + to : '+');
+
+            // Append the label to the legend div.
+            div.innerHTML += label + '<br>';
+        }
+
+        return div;
     };
- 
+
     legend.addTo(map);
- }
+}
+
+ 
  
 function createMap(earthquakes) {
 
@@ -119,3 +126,4 @@ function createMap(earthquakes) {
    
    addLegend(myMap);
 }
+
