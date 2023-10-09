@@ -69,6 +69,9 @@ function addLegend(map) {
         div.style.backgroundColor = 'white';
         div.style.padding = '10px';
 
+        let legendInfo = "<h3>Depth (km)</h3>"
+        div.innerHTML = legendInfo;
+
         // Loop through the depth ranges and generate labels with color previews.
         for (let i = 0; i < depths.length; i++) {
             let from = depths[i];
@@ -76,8 +79,8 @@ function addLegend(map) {
             let color = colors(from + 1);
 
             // Create a label with a colored square and the depth range.
-            let label = '<li style="background:' + color + '"></i> ' +
-            from + (to ? '&ndash;' + to : '+');
+            let label = '<ul style="background:' + color + '" >' 
+            + from + (to ? '&ndash;' + to : '+');
 
             // Append the label to the legend div.
             div.innerHTML += label + '<br>';
